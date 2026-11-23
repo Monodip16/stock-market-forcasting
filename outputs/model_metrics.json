@@ -1,0 +1,19 @@
+{
+  "ARIMA": {
+    "MAE": 38.9642,
+    "RMSE": 53.181,
+    "MAPE": 13.6737,
+    "Directional_Accuracy": 0.17
+  },
+  "LSTM": {
+    "MAE": 15.7302,
+    "RMSE": 20.6175,
+    "MAPE": 5.6416,
+    "Directional_Accuracy": 50.5
+  },
+  "improvements": {
+    "MAE": 59.63,
+    "RMSE": 61.23,
+    "MAPE": 58.74
+  }
+}
