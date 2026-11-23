@@ -116,11 +116,18 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             return
 
         clean_path = path.lstrip("/")
-        # Check static dir
+        # Check static dir with path traversal prevention
         target = os.path.join(STATIC_DIR, clean_path)
-        if os.path.exists(target) and os.path.isfile(target):
-            mime_type, _ = mimetypes.guess_type(target)
-            self.serve_file(target, mime_type or "application/octet-stream")
+        target_resolved = os.path.realpath(target)
+        static_resolved = os.path.realpath(STATIC_DIR)
+
+        if not target_resolved.startswith(static_resolved):
+            self.send_error(HTTPStatus.FORBIDDEN, "Access denied: Path traversal detected")
+            return
+
+        if os.path.exists(target_resolved) and os.path.isfile(target_resolved):
+            mime_type, _ = mimetypes.guess_type(target_resolved)
+            self.serve_file(target_resolved, mime_type or "application/octet-stream")
             return
 
         # 404
@@ -284,7 +291,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
         sys.stderr.write(f"[DASHBOARD] {self.address_string()} - {format % args}\n")
 
 
-def run_server(port: int = 8050, bind: str = "0.0.0.0"):
+def run_server(port: int = 8050, bind: str = "127.0.0.1"):
     """Launch the dashboard HTTP server."""
     server_address = (bind, port)
     try:
@@ -299,7 +306,7 @@ def run_server(port: int = 8050, bind: str = "0.0.0.0"):
     print("   STOCK MARKET FORECASTING - ACADEMIC SHOWCASE DASHBOARD SERVER   ")
     print("=" * 75)
     print(f" Web Dashboard URL : http://localhost:{port}")
-    print(f" Network Access    : http://127.0.0.1:{port}")
+    print(f" Local Loopback    : http://127.0.0.1:{port}")
     print(f" REST API Base     : http://localhost:{port}/api/overview")
     print(" Press Ctrl+C at any time to safely shut down the dashboard server.")
     print("=" * 75)
@@ -316,7 +323,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Stock Market Prediction Dashboard Server")
     parser.add_argument("--port", type=int, default=8050, help="Port to bind server (default: 8050)")
-    parser.add_argument("--bind", type=str, default="0.0.0.0", help="Host address (default: 0.0.0.0)")
+    parser.add_argument("--bind", type=str, default="127.0.0.1", help="Host address (default: 127.0.0.1 for localhost security)")
     args = parser.parse_args()
 
     run_server(port=args.port, bind=args.bind)
