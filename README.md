@@ -234,7 +234,47 @@ LSTM            | 5.1420       | 6.8315       | 2.26
 
 ## 7. Analysis and Conclusions
 
-1. **Stationarity**: The raw closing price series of AAPL is strongly non-stationary ($p \approx 0.996$), exhibiting an upward trend. Applying first differencing ($\Delta y_t$) achieves immediate stationarity ($p < 0.0001$), satisfying the fundamental condition for Box-Jenkins modeling.
-2. **ARIMA Characteristics**: Multi-step recursive forecasting with ARIMA projects the conditional mean based on past autoregressive patterns and differences. In a multi-step out-of-sample horizon without continuous real-time refitting, ARIMA forecasts revert toward a linear drift.
-3. **LSTM Capabilities**: The LSTM neural network leverages its 60-day historical window to adapt dynamically to recent price levels and non-linear momentum, achieving substantially lower MAE and RMSE across the test horizon.
-4. **Reproducibility**: All random seeds across NumPy, Python, and TensorFlow are locked to `42`, guaranteeing verifiable and deterministic results across runs.
+1. **Stationarity**: The raw closing price series of AAPL is strongly non-stationary ($p \approx 0.991$), exhibiting a stochastic upward drift. Applying first differencing ($\Delta y_t$) achieves immediate weak stationarity ($p = 1.57 \times 10^{-29}$), satisfying the foundational condition for Box-Jenkins modeling.
+2. **ARIMA Characteristics**: Multi-step recursive forecasting with ARIMA projects conditional expected values. In a multi-step out-of-sample horizon without continuous refitting, ARIMA(0, 1, 0) forecasts revert to a linear drift line.
+3. **LSTM Capabilities**: The LSTM neural network leverages its 60-day historical window to adapt dynamically to recent price levels and non-linear momentum, achieving a ~60% reduction in MAE and RMSE compared to ARIMA across the holdout test horizon.
+4. **Reproducibility & Zero Leakage**: All random seeds across NumPy, Python, and TensorFlow are locked to `42`. Train/test splitting is strictly chronological (80/20) and normalization scaling parameters are fitted exclusively on the training split, completely eliminating lookahead bias.
+
+---
+
+## 8. Interactive Academic Showcase Dashboard & Viva Defense
+
+For presentations in front of university professors, evaluators, and academic defenses, an interactive web dashboard is provided out-of-the-box:
+
+```bash
+# From workspace root or stock-market-forecasting/
+python run_dashboard.py
+# or:
+./run_dashboard.sh
+```
+
+Then open your browser to **`http://localhost:8050`**.
+
+### Dashboard Modules
+1. **Benchmark & Live Forecasts**:
+   - Interactive zoomable time series comparing Ground Truth Actual vs. ARIMA vs. LSTM.
+   - Live KPI scorecard with percentage error improvements (59.6% lower MAE, 61.2% lower RMSE, 5.64% MAPE).
+   - Time-horizon filters (All 599 Test Days, 1 Year, 6 Months, 3 Months).
+2. **Stationarity & Econometrics**:
+   - Live Augmented Dickey-Fuller (ADF) hypothesis test cards with critical thresholds (1%, 5%, 10%) and decision badges.
+   - Interactive 30-Day Rolling Mean and Volatility clustering chart.
+   - Autocorrelation (ACF) and Partial Autocorrelation (PACF) diagnostic bar plots with 95% Bartlett confidence limits ($\pm 1.96/\sqrt{N}$).
+3. **Residual & Error Dynamics**:
+   - Daily error series ($e_t = y_t - \hat{y}_t$) highlighting ARIMA drift vs. LSTM mean-reverting error bounds.
+   - Cumulative absolute error divergence curve.
+   - Error frequency distribution histogram.
+4. **Mathematical Formulations & Architecture**:
+   - Complete Box-Jenkins ARIMA decomposition and AIC minimization formulas.
+   - LSTM recurrent memory cell gating equations ($f_t, i_t, C_t, o_t, h_t$).
+   - Sequence window architecture and proof of zero lookahead bias.
+5. **Professor Defense & Viva Guide**:
+   - 8 critical questions frequently asked by academic committees and professors, paired with rigorous mathematical answers and defense talking points.
+6. **Presentation Features**:
+   - **Presentation Mode Toggle (`📽️ Presentation View`)**: Removes UI distractions for projector or screen sharing.
+   - **Printable Executive Summary (`📄 Print Report`)**: Formats a clean academic briefing report.
+   - **100% Offline Capability**: Built-in fallback canvas rendering allows full offline operation without Wi-Fi.
+
