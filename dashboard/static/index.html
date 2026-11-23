@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Forecasting: ARIMA vs. LSTM | Academic Defense Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js from CDN with graceful offline fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header class="top-header">
+    <div class="header-brand">
+      <div class="brand-icon">📈</div>
+      <div class="brand-text">
+        <h1>Stock Market Forecasting Benchmark</h1>
+        <p>Econometric ARIMA vs. Deep Learning LSTM &bull; Academic Showcase</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="badge badge-blue" id="header-ticker">TICKER: AAPL</span>
+      <span class="badge badge-green" id="header-samples">2,991 SAMPLES</span>
+      <span class="badge badge-amber" id="header-split">80% TRAIN / 20% TEST</span>
+      <span class="badge badge-rose" title="Strict Chronological Split, No Lookahead">ZERO LEAKAGE</span>
+      <button class="btn" id="btn-toggle-presentation" title="Toggle Fullscreen Presentation View">
+        <span>📽️</span> Presentation View
+      </button>
+      <button class="btn btn-primary" id="btn-print-report" title="Print Academic Summary Report">
+        <span>📄</span> Print Report
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-container">
+    <button class="nav-tab active" data-tab="benchmark">
+      <span>📊</span> Benchmark & Forecasts
+    </button>
+    <button class="nav-tab" data-tab="stationarity">
+      <span>🔬</span> Stationarity & Econometrics
+    </button>
+    <button class="nav-tab" data-tab="residuals">
+      <span>📉</span> Residual & Error Analysis
+    </button>
+    <button class="nav-tab" data-tab="theory">
+      <span>🧠</span> Mathematical Foundations
+    </button>
+    <button class="nav-tab" data-tab="defense">
+      <span>🎓</span> Professor Viva & Defense Guide
+    </button>
+    <button class="nav-tab" data-tab="data">
+      <span>🗄️</span> Dataset Explorer
+    </button>
+  </nav>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: BENCHMARK & FORECASTS -->
+    <!-- ========================================== -->
+    <section id="tab-benchmark" class="tab-pane active">
+      
+      <!-- Callout Summary -->
+      <div class="callout callout-info">
+        <span style="font-size: 1.25rem;">💡</span>
+        <div>
+          <strong>Executive Benchmark Finding:</strong>
+          Evaluating on identical holdout test dates (July 2024 &ndash; November 2026), the deep learning <strong>LSTM</strong> model achieved a Mean Absolute Error of <strong>$15.73</strong> (MAPE 5.64%), outperforming classical <strong>ARIMA</strong> ($38.96 MAE, MAPE 13.67%) by <strong>59.6%</strong>. The non-linear gating mechanisms of LSTM effectively tracked sustained multi-quarter momentum that classical mean-reverting stochastic models could not capture.
+        </div>
+      </div>
+
+      <!-- KPI Metrics Grid -->
+      <div class="metrics-grid">
+        <!-- MAE Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Mean Absolute Error (MAE)</span>
+            <span class="badge badge-green" id="kpi-mae-delta">-59.6%</span>
+          </div>
+          <div class="kpi-value-container">
+            <div class="kpi-main-val" id="kpi-lstm-mae">$15.73</div>
+            <div class="kpi-sub-val">LSTM</div>
+          </div>
+          <div class="kpi-delta">
+            vs. ARIMA: <span id="kpi-arima-mae" style="color: var(--accent-amber); font-family: var(--font-mono); margin-left: 4px;">$38.96</span>
+          </div>
+        </div>
+
+        <!-- RMSE Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Root Mean Squared Error (RMSE)</span>
+            <span class="badge badge-green" id="kpi-rmse-delta">-61.2%</span>
+          </div>
+          <div class="kpi-value-container">
+            <div class="kpi-main-val" id="kpi-lstm-rmse">$20.62</div>
+            <div class="kpi-sub-val">LSTM</div>
+          </div>
+          <div class="kpi-delta">
+            vs. ARIMA: <span id="kpi-arima-rmse" style="color: var(--accent-amber); font-family: var(--font-mono); margin-left: 4px;">$53.18</span>
+          </div>
+        </div>
+
+        <!-- MAPE Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Mean Absolute % Error (MAPE)</span>
+            <span class="badge badge-green" id="kpi-mape-delta">-58.7%</span>
+          </div>
+          <div class="kpi-value-container">
+            <div class="kpi-main-val" id="kpi-lstm-mape">5.64%</div>
+            <div class="kpi-sub-val">LSTM</div>
+          </div>
+          <div class="kpi-delta">
+            vs. ARIMA: <span id="kpi-arima-mape" style="color: var(--accent-amber); font-family: var(--font-mono); margin-left: 4px;">13.67%</span>
+          </div>
+        </div>
+
+        <!-- Directional Accuracy Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Directional Hit Ratio</span>
+            <span class="badge badge-blue">Day-over-Day</span>
+          </div>
+          <div class="kpi-value-container">
+            <div class="kpi-main-val" id="kpi-lstm-dir">50.5%</div>
+            <div class="kpi-sub-val">LSTM</div>
+          </div>
+          <div class="kpi-delta">
+            vs. ARIMA: <span id="kpi-arima-dir" style="color: var(--accent-amber); font-family: var(--font-mono); margin-left: 4px;">0.17% (Drift)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Forecast Comparison Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title-group">
+            <h2>Primary Benchmark: Actual vs. ARIMA vs. LSTM Forecasts</h2>
+            <p>Chronological Holdout Test Evaluation (July 2024 &ndash; November 2026, 599 Trading Days)</p>
+          </div>
+          <div class="chart-controls">
+            <div class="chart-btn-group" id="forecast-range-selector">
+              <button data-range="all" class="active">All Test</button>
+              <button data-range="1y">1 Year</button>
+              <button data-range="6m">6 Months</button>
+              <button data-range="3m">3 Months</button>
+            </div>
+            <button class="btn" id="btn-reset-zoom">Reset Zoom</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="canvas-container">
+          <canvas id="forecastCanvas"></canvas>
+        </div>
+
+        <!-- Interactive Legend Pills -->
+        <div class="legend-pills">
+          <label class="legend-item">
+            <input type="checkbox" id="toggle-actual" checked>
+            <span class="legend-color-dot" style="background: #38bdf8;"></span>
+            <span>Actual Price (Ground Truth)</span>
+          </label>
+          <label class="legend-item">
+            <input type="checkbox" id="toggle-lstm" checked>
+            <span class="legend-color-dot" style="background: #10b981;"></span>
+            <span>LSTM Forecast (Seq=60)</span>
+          </label>
+          <label class="legend-item">
+            <input type="checkbox" id="toggle-arima" checked>
+            <span class="legend-color-dot" style="background: #f59e0b;"></span>
+            <span>ARIMA(0, 1, 0) Forecast</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Performance Summary Table -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header">
+          <span class="card-title">Comprehensive Statistical Evaluation Matrix</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Model Architecture</th>
+                <th>Paradigm</th>
+                <th>MAE (USD)</th>
+                <th>RMSE (USD)</th>
+                <th>MAPE (%)</th>
+                <th>Directional Accuracy</th>
+                <th>Error Reduction vs. Baseline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ARIMA(0, 1, 0)</strong></td>
+                <td>Classical Econometric / Box-Jenkins</td>
+                <td>$38.96</td>
+                <td>$53.18</td>
+                <td>13.67%</td>
+                <td>0.17%</td>
+                <td><span class="badge badge-amber">Baseline</span></td>
+              </tr>
+              <tr>
+                <td><strong>LSTM (2-Layer + Dropout)</strong></td>
+                <td>Deep Learning Sequence Modeling</td>
+                <td><strong style="color: var(--accent-green);">$15.73</strong></td>
+                <td><strong style="color: var(--accent-green);">$20.62</strong></td>
+                <td><strong style="color: var(--accent-green);">5.64%</strong></td>
+                <td><strong style="color: var(--accent-green);">50.50%</strong></td>
+                <td><span class="badge badge-green">59.63% Improvement</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: STATIONARITY & ECONOMETRICS -->
+    <!-- ========================================== -->
+    <section id="tab-stationarity" class="tab-pane">
+      <div class="callout callout-info">
+        <span style="font-size: 1.25rem;">🔬</span>
+        <div>
+          <strong>Econometric Pre-condition for Time Series Modeling:</strong>
+          Time series forecasting requires rigorous stationarity verification. A series with time-varying mean or unit roots causes spurious regression. We apply the formal <strong>Augmented Dickey-Fuller (ADF)</strong> hypothesis test and first-order differencing ($d=1$).
+        </div>
+      </div>
+
+      <!-- ADF Hypothesis Results Grid -->
+      <div class="two-col-grid">
+        <!-- Raw ADF Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">ADF Test: Raw Closing Prices</span>
+            <span class="badge badge-rose" id="adf-raw-verdict">NON-STATIONARY</span>
+          </div>
+          <div style="margin: 0.75rem 0;">
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              Null Hypothesis ($H_0$): Unit root exists ($\gamma = 0$, series is non-stationary).
+            </p>
+            <div class="table-responsive">
+              <table class="data-table">
+                <tbody>
+                  <tr><td>ADF Test Statistic</td><td id="adf-raw-stat">+0.7634</td></tr>
+                  <tr><td>p-value</td><td id="adf-raw-pval">0.9910 (&gt; 0.05)</td></tr>
+                  <tr><td>Critical Value (1%)</td><td id="adf-raw-c1">-3.4326</td></tr>
+                  <tr><td>Critical Value (5%)</td><td id="adf-raw-c5">-2.8625</td></tr>
+                  <tr><td>Critical Value (10%)</td><td id="adf-raw-c10">-2.5673</td></tr>
+                  <tr><td>Lags Used</td><td id="adf-raw-lags">28 lags (AIC selected)</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--accent-rose); margin-top: 0.5rem;">
+              &cross; Fail to Reject $H_0$: Raw asset prices exhibit significant stochastic trend.
+            </p>
+          </div>
+        </div>
+
+        <!-- Differenced ADF Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">ADF Test: First Differenced (&Delta;y<sub>t</sub>, d=1)</span>
+            <span class="badge badge-green" id="adf-diff-verdict">STATIONARY</span>
+          </div>
+          <div style="margin: 0.75rem 0;">
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              First Differencing: $\Delta y_t = y_t - y_{t-1}$.
+            </p>
+            <div class="table-responsive">
+              <table class="data-table">
+                <tbody>
+                  <tr><td>ADF Test Statistic</td><td id="adf-diff-stat">-16.8924</td></tr>
+                  <tr><td>p-value</td><td id="adf-diff-pval">1.57 &times; 10<sup>-29</sup> (&lt;&lt; 0.05)</td></tr>
+                  <tr><td>Critical Value (1%)</td><td id="adf-diff-c1">-3.4326</td></tr>
+                  <tr><td>Critical Value (5%)</td><td id="adf-diff-c5">-2.8625</td></tr>
+                  <tr><td>Critical Value (10%)</td><td id="adf-diff-c10">-2.5673</td></tr>
+                  <tr><td>Lags Used</td><td id="adf-diff-lags">27 lags</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--accent-green); margin-top: 0.5rem;">
+              &check; Reject $H_0$ at 1% alpha: First differencing achieves weak stationarity ($d=1$).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rolling Mean & Std Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title-group">
+            <h2>30-Day Rolling Statistics (Mean &amp; Volatility)</h2>
+            <p>Illustrates time-dependent mean expansion and volatility clustering over 2,991 trading days</p>
+          </div>
+        </div>
+        <div class="canvas-container" style="height: 340px;">
+          <canvas id="rollingStatsCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- ACF / PACF Diagnostic Plot -->
+      <div class="two-col-grid" style="margin-top: 1.5rem;">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title-group">
+              <h2>Autocorrelation Function (ACF)</h2>
+              <p>Differenced Series (&Delta;y<sub>t</sub>) &bull; Lags 0 &ndash; 30</p>
+            </div>
+          </div>
+          <div class="canvas-container" style="height: 280px;">
+            <canvas id="acfCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title-group">
+              <h2>Partial Autocorrelation Function (PACF)</h2>
+              <p>Differenced Series (&Delta;y<sub>t</sub>) &bull; Lags 0 &ndash; 30</p>
+            </div>
+          </div>
+          <div class="canvas-container" style="height: 280px;">
+            <canvas id="pacfCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: RESIDUAL & ERROR ANALYSIS -->
+    <!-- ========================================== -->
+    <section id="tab-residuals" class="tab-pane">
+      <div class="callout callout-info">
+        <span style="font-size: 1.25rem;">📉</span>
+        <div>
+          <strong>Error Residual Dynamics ($e_t = y_t - \hat{y}_t$):</strong>
+          Examining the residual error distribution confirms that ARIMA suffers from cumulative directional drift (mean error -$38.96), while LSTM residuals remain symmetrically bounded around zero with rapid mean-reversion.
+        </div>
+      </div>
+
+      <!-- Residual Time Series -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title-group">
+            <h2>Daily Prediction Residuals ($y_{actual} - y_{predicted}$)</h2>
+            <p>Positive values indicate model underpredicted; negative values indicate overpredicted.</p>
+          </div>
+        </div>
+        <div class="canvas-container" style="height: 340px;">
+          <canvas id="residualCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Cumulative Error Comparison -->
+      <div class="two-col-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title-group">
+              <h2>Cumulative Absolute Error Over Test Horizon</h2>
+              <p>Tracking divergence growth between ARIMA and LSTM</p>
+            </div>
+          </div>
+          <div class="canvas-container" style="height: 300px;">
+            <canvas id="cumErrorCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title-group">
+              <h2>Absolute Error Distribution (Histogram)</h2>
+              <p>Frequency distribution of error magnitudes across 599 test days</p>
+            </div>
+          </div>
+          <div class="canvas-container" style="height: 300px;">
+            <canvas id="histCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: MATHEMATICAL FOUNDATIONS & ARCHITECTURE -->
+    <!-- ========================================== -->
+    <section id="tab-theory" class="tab-pane">
+      
+      <div class="two-col-grid">
+        <!-- ARIMA Formula Card -->
+        <div class="formula-card">
+          <h3>📐 Classical Econometric Model: ARIMA(p, d, q)</h3>
+          <div class="formula-math">
+            &phi;(B)(1 - B)<sup>d</sup> y<sub>t</sub> = c + &theta;(B) &epsilon;<sub>t</sub>
+          </div>
+          <div class="formula-explanation">
+            <p><strong>Box-Jenkins Decomposition:</strong></p>
+            <ul style="margin: 0.5rem 0 0.5rem 1.2rem; font-size: 0.825rem;">
+              <li><strong>p (Autoregressive Order)</strong>: &phi;(B) = 1 - &sum;<sub>i=1</sub><sup>p</sup> &phi;<sub>i</sub> B<sup>i</sup> (Lagged dependencies).</li>
+              <li><strong>d (Differencing Degree)</strong>: (1 - B)<sup>d</sup> eliminates non-stationary stochastic drift ($d=1$).</li>
+              <li><strong>q (Moving Average Order)</strong>: &theta;(B) = 1 + &sum;<sub>j=1</sub><sup>q</sup> &theta;<sub>j</sub> B<sup>j</sup> (Shock innovations).</li>
+              <li><strong>Model Selection Criterion</strong>: Akaike Information Criterion (AIC):
+                <div class="formula-math" style="margin: 0.35rem 0; font-size: 0.75rem;">
+                  AIC = 2k - 2 ln(L&#770;) &rarr; Optimal Order: (0, 1, 0), AIC = 9,735.41
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- LSTM Formula Card -->
+        <div class="formula-card">
+          <h3>🧠 Deep Learning: LSTM Gating Dynamics</h3>
+          <div class="formula-math">
+            f<sub>t</sub> = &sigma;(W<sub>f</sub> [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>f</sub>)<br>
+            i<sub>t</sub> = &sigma;(W<sub>i</sub> [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>i</sub>), &nbsp; C&#771;<sub>t</sub> = tanh(W<sub>c</sub> [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>c</sub>)<br>
+            C<sub>t</sub> = f<sub>t</sub> &odot; C<sub>t-1</sub> + i<sub>t</sub> &odot; C&#771;<sub>t</sub><br>
+            o<sub>t</sub> = &sigma;(W<sub>o</sub> [h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>o</sub>), &nbsp; h<sub>t</sub> = o<sub>t</sub> &odot; tanh(C<sub>t</sub>)
+          </div>
+          <div class="formula-explanation">
+            <p><strong>Recurrent Memory Architecture:</strong></p>
+            <ul style="margin: 0.5rem 0 0.5rem 1.2rem; font-size: 0.825rem;">
+              <li><strong>Forget Gate (f<sub>t</sub>)</strong>: Discards non-essential historical memory.</li>
+              <li><strong>Input Gate &amp; Candidate (i<sub>t</sub>, C&#771;<sub>t</sub>)</strong>: Selectively stores new market movements.</li>
+              <li><strong>Cell State (C<sub>t</sub>)</strong>: Constant Error Carousel (CEC) preventing vanishing gradients.</li>
+              <li><strong>Output Gate (o<sub>t</sub>)</strong>: Generates the hidden sequence embedding h<sub>t</sub>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline Architecture Diagram & Zero Leakage Protocol -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <span class="card-title">Sliding Window Sequence Modeling &amp; Zero-Leakage Pipeline</span>
+        </div>
+        <div style="font-size: 0.85rem; line-height: 1.7; color: #cbd5e1;">
+          <p>
+            Standard cross-validation leaks future market information into past predictions. This pipeline implements a strict zero-leakage protocol:
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <h4 style="color: var(--accent-blue); margin-bottom: 0.4rem;">1. Chronological Splitting</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                Data is partitioned chronologically into 80% Train (2015 &ndash; July 2024, 2,392 days) and 20% Holdout Test (July 2024 &ndash; Nov 2026, 599 days). Never shuffled.
+              </p>
+            </div>
+            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <h4 style="color: var(--accent-green); margin-bottom: 0.4rem;">2. Isolated Normalization</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                MinMaxScaler is fitted strictly on the 80% training set ($X_{min}, X_{max}$). Test data is transformed using fixed training bounds without refitting.
+              </p>
+            </div>
+            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <h4 style="color: var(--accent-amber); margin-bottom: 0.4rem;">3. Sliding Window Alignment</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                Each sample consists of 60 consecutive trading days ($x \in \mathbb{R}^{60 \times 1}$) predicting day 61. Test set prefixes the trailing 60 train days to cover 100% of test dates.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: PROFESSOR DEFENSE & VIVA GUIDE -->
+    <!-- ========================================== -->
+    <section id="tab-defense" class="tab-pane">
+      <div class="callout callout-success">
+        <span style="font-size: 1.25rem;">🎓</span>
+        <div>
+          <strong>Professor Viva &amp; Capstone Defense Companion:</strong>
+          These 8 questions represent the most frequent and rigorous inquiries posed by university professors, econometricians, and machine learning reviewers during capstone and master's thesis defenses. Click any question to reveal the formal defense argument.
+        </div>
+      </div>
+
+      <!-- Accordion Container -->
+      <div id="qa-accordion-container">
+        <!-- Dynamically populated by app.js from /api/qa -->
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 6: DATASET EXPLORER -->
+    <!-- ========================================== -->
+    <section id="tab-data" class="tab-pane">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title-group">
+            <h2>Historical Market Dataset Inspector (AAPL)</h2>
+            <p>2,991 Trading Days &bull; Daily Open, High, Low, Close, Volume &amp; Transformed Differences</p>
+          </div>
+          <div class="chart-controls">
+            <input type="text" id="table-search-input" placeholder="Search Date (YYYY-MM-DD)..." class="btn" style="width: 220px; font-family: var(--font-mono); text-align: left;">
+            <button class="btn btn-primary" id="btn-export-csv">Download CSV</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="historical-data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Open ($)</th>
+                <th>High ($)</th>
+                <th>Low ($)</th>
+                <th>Close ($)</th>
+                <th>Volume</th>
+                <th>30-Day Mean ($)</th>
+                <th>Daily Diff (&Delta;)</th>
+              </tr>
+            </thead>
+            <tbody id="historical-table-body">
+              <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Loading dataset...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">
+          <div id="table-page-info">Showing page 1 of 60</div>
+          <div class="chart-btn-group">
+            <button id="btn-table-prev">&laquo; Previous</button>
+            <button id="btn-table-next">Next &raquo;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
