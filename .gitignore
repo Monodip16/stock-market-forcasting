@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv
+.venv/
+venv
+venv/
+env
+env/
+
+# Data files (keep folder structure)
+data/*.csv
+!data/.gitkeep
+
+# Output generated plots and figures (keep folder structure)
+outputs/*.png
+!outputs/.gitkeep
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
